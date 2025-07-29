@@ -5,12 +5,19 @@ import pandas as pd
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Any
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', '')
+
 
 # Create the MCP server
 mcp = FastMCP("Stock Analysis Server", dependencies=["requests", "pandas", "tabulate"])
 
 # Constants and configurations
-API_KEY = "5JMQ4M6750LSJN7W"  # AlphaVantage API key
+  
 
 
 @dataclass
@@ -25,7 +32,7 @@ class AlphaVantageAPI:
     @staticmethod
     def get_intraday_data(symbol: str, interval: str = "1min", outputsize: str = "compact") -> pd.DataFrame:
         """Fetch intraday data from AlphaVantage API"""
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&outputsize={outputsize}&apikey={API_KEY}"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&outputsize={outputsize}&apikey={ALPHA_VANTAGE_API_KEY}"
         
         response = requests.get(url)
         data = response.json()
