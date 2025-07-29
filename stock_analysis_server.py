@@ -12,12 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', '')
 
-
 # Create the MCP server
 mcp = FastMCP("Stock Analysis Server", dependencies=["requests", "pandas", "tabulate"])
-
-# Constants and configurations
-  
 
 
 @dataclass
@@ -62,16 +58,19 @@ class AlphaVantageAPI:
             
         return df
 
+
 # In-memory cache for market data
 market_data_cache: Dict[str, MarketData] = {}
 
-# Resources
+
+# === Resources ===
 @mcp.resource("config://app")
 def get_config() -> str:
     """Static configuration data"""
     return "App configuration here"
 
-# Technical Analysis Tools
+
+# === Technical Analysis Tools ===
 @mcp.tool()
 def calculate_moving_averages(symbol: str, short_period: int = 20, long_period: int = 50) -> Dict[str, Any]:
     """
@@ -161,6 +160,7 @@ def calculate_moving_averages(symbol: str, short_period: int = 20, long_period: 
             }"""
     }
 
+
 @mcp.tool()
 def calculate_rsi(symbol: str, period: int = 14) -> Dict[str, Any]:
     """
@@ -230,6 +230,7 @@ def calculate_rsi(symbol: str, period: int = 14) -> Dict[str, Any]:
                 "HOLD"
             }"""
     }
+
 
 @mcp.tool()
 def trade_recommendation(symbol: str) -> Dict[str, Any]:
@@ -335,7 +336,8 @@ def trade_recommendation(symbol: str) -> Dict[str, Any]:
         "analysis": analysis
     }
 
-# Prompts
+
+# === Prompts ===
 @mcp.prompt()
 def analyze_ticker(symbol: str) -> str:
     """
@@ -357,6 +359,7 @@ def analyze_ticker(symbol: str) -> str:
 
         Please organize your response in a clear, structured format suitable for a professional trader.
         """
+
 
 @mcp.prompt()
 def compare_tickers(symbols: str) -> str:
@@ -387,6 +390,7 @@ def compare_tickers(symbols: str) -> str:
 
         Conclude with a specific recommendation on which stock to trade and what action to take (buy, sell, or hold).
         """
+
 
 @mcp.prompt()
 def intraday_strategy_builder(symbol: str) -> str:
